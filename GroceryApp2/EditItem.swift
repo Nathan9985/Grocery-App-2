@@ -13,16 +13,45 @@ struct EditItem: View {
     // GroceryItem object is received from ContentView, thus @ObservedObject
     @ObservedObject var groceryItem: GroceryItem
     
+    @State var updatedName: String = ""
+    @State var updatedCategory: Category = .None
+    @State var UpdatedBestby: Date = Date()
+    
     var body: some View {
         VStack(alignment: .center) {
-            Text(groceryItem.name)
-            
-            Button(
-                "Change Text",
-                action: {
-                    groceryItem.name = "\(groceryItem.name) But Better"
+            // Gather the Name, Category, and Best By date of new item,
+            // then add it to the underlying object of GroceryItems
+            Form {
+                TextField(
+                    "Item Name",
+                    text: $updatedName
+                )
+                
+                Picker("Category", selection: $updatedCategory) {
+                    ForEach(Category.allCases, id: \.self) { category in
+                        Text(category.rawValue)
+                    }
                 }
-            )
+                
+                DatePicker("Best By", selection: $UpdatedBestby, displayedComponents: [.date])
+                
+                Button(
+                    "Update Item",
+                    action: {
+                        self.groceryItem.name = updatedName
+                        self.groceryItem.category = updatedCategory
+                        self.groceryItem.bestby = UpdatedBestby
+                    }
+                )
+            }
+            .onAppear() {
+                // Prepopulate @State variables with current value in list
+                // Do onAppear instead of an init so keep the @ObservedObject and
+                // @State variables in sync
+                updatedName = groceryItem.name
+                updatedCategory = groceryItem.category
+                UpdatedBestby = groceryItem.bestby
+            }
         }
     }
 }
