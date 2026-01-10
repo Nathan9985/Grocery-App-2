@@ -20,6 +20,24 @@ struct ContentView: View {
     // Created and owned by ContentView but used elsewhere, so @StateObject
     @StateObject var groceryItems: GroceryItems = GroceryItems()
     
+    // States for filtering and sorting
+    @State private var selectedCategory: Category = .None
+    @State private var sortByBestby = true
+    
+    // Array to actually filter and sort groceryItems
+    // Maintain one source of truth in groceryItems, maintain display properties in
+    // displayedItems
+    var displayedItems: [GroceryItem] {
+        groceryItems.items
+            .filter { item in
+                // If selectedCategory is None, let all items pass, otherwise check category for match
+                selectedCategory == .None || item.category == selectedCategory
+            }
+            .sorted { lhs, rhs in
+                sortByBestby ? lhs.bestby < rhs.bestby : lhs.name < rhs.name
+            }
+    }
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .center, spacing: 2.0) {
@@ -27,7 +45,7 @@ struct ContentView: View {
                 // When cell clicked on, go into edit screen
                 // When plus button clicked on, go into add screen
                 List() {
-                    ForEach(groceryItems.items) { item in
+                    ForEach(displayedItems) { item in
                         NavigationLink(destination: EditItem(groceryItem: item)) {
                             ItemRow(groceryItem: item)
                         }
@@ -36,6 +54,7 @@ struct ContentView: View {
                 }
                 .navigationTitle(Text("Your Fridge/Pantry"))
                 .toolbar {
+                    // Add item button
                     ToolbarItem(placement: .topBarTrailing) {
                         NavigationLink {
                             AddItem(groceryItems: groceryItems)
@@ -44,14 +63,45 @@ struct ContentView: View {
                                 .font(.title2)
                         }
                     }
+                    
+                    // Sort by button
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            sortByBestby.toggle()
+                        } label: {
+                            sortByBestby ? Text("Best by") : Text("Name")
+                        }
+                    }
+                    
+                    // Filter button
+                    ToolbarItem(placement: .topBarLeading) {
+                        Picker("Fitler", selection: $selectedCategory) {
+                            ForEach(Category.allCases, id: \.self) { category in
+                                if (category == .None) {
+                                    Text("All")
+                                } else {
+                                    Text(category.rawValue)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
     
     // Delete a groceryItem from groceryItems underlying array
+    // Because they are selecting from the filtered and sorted list,
+    // get the unique ID of the item and use that to delete from underlying array
+    // since the indeces no longer align
     func deleteItem(at offsets: IndexSet) {
-        groceryItems.items.remove(atOffsets: offsets)
+        // Since onDelete could send in multiple indeces, go through each and delete from
+        // actual array (groceryItems), not display array (displayedItems)
+        for index in offsets {
+            let displayID = displayedItems[index].id
+            let itemIndex = groceryItems.items.firstIndex(where: { $0.id == displayID })
+            groceryItems.items.remove(at: itemIndex!)
+        }
     }
 }
 
