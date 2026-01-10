@@ -28,35 +28,38 @@ struct AddSavedItem: View {
     var body: some View {
         // Gather the Name, Category, and Lifespan of new item,
         // then add it to the underlying object of SavedItems
-        Form {
-            TextField(
-                "Item Name",
-                text: $selectedName
-            )
-            
-            Picker("Category", selection: $selectedCategory) {
-                ForEach(Category.allCases, id: \.self) { category in
-                    Text(category.rawValue)
-                }
-            }
-            
-            TextField(
-                "Lifespan",
-                value: $selectedLifespan,
-                formatter: lifespanFormatter
-            )
-            
-            Button(
-                "Add Item",
-                action: {
-                    if (selectedLifespan == nil) {
-                        savedItems.items.append(SavedItem(name: self.selectedName, category: self.selectedCategory, lifespan: 0))
-                    } else {
-                        savedItems.items.append(SavedItem(name: self.selectedName, category: self.selectedCategory, lifespan: self.selectedLifespan!))
+        NavigationView {
+            Form {
+                TextField(
+                    "Item Name",
+                    text: $selectedName
+                )
+                
+                Picker("Category", selection: $selectedCategory) {
+                    ForEach(Category.allCases, id: \.self) { category in
+                        Text(category.rawValue)
                     }
-                    dismiss()
                 }
-            )
+                
+                TextField(
+                    "Lifespan",
+                    value: $selectedLifespan,
+                    formatter: lifespanFormatter
+                )
+                
+                Button(
+                    "Add Item",
+                    action: {
+                        if (selectedLifespan == nil) {
+                            savedItems.items.append(SavedItem(name: self.selectedName, category: self.selectedCategory, lifespan: 0))
+                        } else {
+                            savedItems.items.append(SavedItem(name: self.selectedName, category: self.selectedCategory, lifespan: self.selectedLifespan!))
+                        }
+                        dismiss()
+                    }
+                )
+            }
+            .navigationTitle("Save Item")
         }
     }
 }
