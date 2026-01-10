@@ -26,10 +26,13 @@ struct ContentView: View {
                 // Display list of all groceries currently stored
                 // When cell clicked on, go into edit screen
                 // When plus button clicked on, go into add screen
-                List(groceryItems.items) { groceryItem in
-                    NavigationLink(destination: EditItem(groceryItem: groceryItem)) {
-                        ItemRow(groceryItem: groceryItem)
+                List() {
+                    ForEach(groceryItems.items) { item in
+                        NavigationLink(destination: EditItem(groceryItem: item)) {
+                            ItemRow(groceryItem: item)
+                        }
                     }
+                    .onDelete(perform: deleteItem)
                 }
                 .navigationTitle(Text("Your Fridge/Pantry"))
                 .toolbar {
@@ -44,6 +47,11 @@ struct ContentView: View {
                 }
             }
         }
+    }
+    
+    // Delete a groceryItem from groceryItems underlying array
+    func deleteItem(at offsets: IndexSet) {
+        groceryItems.items.remove(atOffsets: offsets)
     }
 }
 
