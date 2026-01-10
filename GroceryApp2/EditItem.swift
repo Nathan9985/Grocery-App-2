@@ -12,10 +12,13 @@ struct EditItem: View {
     
     // GroceryItem object is received from ContentView, thus @ObservedObject
     @ObservedObject var groceryItem: GroceryItem
+    @ObservedObject var groceryItems: GroceryItems
     
     @State var updatedName: String = ""
     @State var updatedCategory: Category = .None
     @State var UpdatedBestby: Date = Date()
+    
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack(alignment: .center) {
@@ -41,6 +44,9 @@ struct EditItem: View {
                         self.groceryItem.name = updatedName
                         self.groceryItem.category = updatedCategory
                         self.groceryItem.bestby = UpdatedBestby
+                        
+                        groceryItems.itemDidChange()
+                        dismiss()
                     }
                 )
             }
@@ -57,5 +63,5 @@ struct EditItem: View {
 }
 
 #Preview {
-    EditItem(groceryItem: GroceryItem(name: "Apple", category: Category.Produce, bestby: createDate(year: 2026, month: 1, day: 16)))
+    EditItem(groceryItem: GroceryItem(name: "Apple", category: Category.Produce, bestby: createDate(year: 2026, month: 1, day: 16)), groceryItems: GroceryItems(items: []))
 }

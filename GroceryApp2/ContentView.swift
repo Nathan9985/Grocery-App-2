@@ -16,9 +16,10 @@ import CoreData
 
 struct ContentView: View {
     
-    // Create the groceryItems object to keep track of groceries in use
+    // Create the groceryItems and savedItems objects to keep track of groceries in use and saved
     // Created and owned by ContentView but used elsewhere, so @StateObject
     @StateObject var groceryItems: GroceryItems = GroceryItems()
+    @StateObject var savedItems: SavedItems = SavedItems()
     
     // States for filtering and sorting
     @State private var selectedCategory: Category = .None
@@ -40,48 +41,46 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .center, spacing: 2.0) {
-                // Display list of all groceries currently stored
-                // When cell clicked on, go into edit screen
-                // When plus button clicked on, go into add screen
-                List() {
-                    ForEach(displayedItems) { item in
-                        NavigationLink(destination: EditItem(groceryItem: item)) {
-                            ItemRow(groceryItem: item)
-                        }
+            // Display list of all groceries currently stored
+            // When cell clicked on, go into edit screen
+            // When plus button clicked on, go into add screen
+            List() {
+                ForEach(displayedItems) { item in
+                    NavigationLink(destination: EditItem(groceryItem: item, groceryItems: groceryItems)) {
+                        ItemRow(groceryItem: item)
                     }
-                    .onDelete(perform: deleteItem)
                 }
-                .navigationTitle(Text("Your Fridge/Pantry"))
-                .toolbar {
-                    // Add item button
-                    ToolbarItem(placement: .topBarTrailing) {
-                        NavigationLink {
-                            AddItem(groceryItems: groceryItems)
-                        } label: {
-                            Image(systemName: "plus.app")
-                                .font(.title2)
-                        }
+                .onDelete(perform: deleteItem)
+            }
+            .navigationTitle(Text("Your Fridge/Pantry"))
+            .toolbar {
+                // Add item button
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        AddItem(groceryItems: groceryItems, savedItems: savedItems)
+                    } label: {
+                        Image(systemName: "plus.app")
+                            .font(.title2)
                     }
-                    
-                    // Sort by button
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            sortByBestby.toggle()
-                        } label: {
-                            sortByBestby ? Text("Best by") : Text("Name")
-                        }
+                }
+                
+                // Sort by button
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        sortByBestby.toggle()
+                    } label: {
+                        sortByBestby ? Text("Best by") : Text("Name")
                     }
-                    
-                    // Filter button
-                    ToolbarItem(placement: .topBarLeading) {
-                        Picker("Fitler", selection: $selectedCategory) {
-                            ForEach(Category.allCases, id: \.self) { category in
-                                if (category == .None) {
-                                    Text("All")
-                                } else {
-                                    Text(category.rawValue)
-                                }
+                }
+                
+                // Filter button
+                ToolbarItem(placement: .topBarLeading) {
+                    Picker("Fitler", selection: $selectedCategory) {
+                        ForEach(Category.allCases, id: \.self) { category in
+                            if (category == .None) {
+                                Text("All")
+                            } else {
+                                Text(category.rawValue)
                             }
                         }
                     }

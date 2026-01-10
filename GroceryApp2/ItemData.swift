@@ -73,4 +73,10 @@ class GroceryItems: ObservableObject {
     init(items: [GroceryItem]) {
         self.items = items
     }
+    
+    // Used for making sure List in ContentView refreshes when an item is updated
+    // since otherwise, item updates aren't sent
+    func itemDidChange() {
+        objectWillChange.send()
+    }
 }
