@@ -89,7 +89,7 @@ struct FromNewView: View {
                     }
                 )
             }
-            .navigationTitle("Add Item")
+            .navigationTitle("Add an Item")
         }
     }
 }

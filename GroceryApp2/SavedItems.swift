@@ -51,7 +51,7 @@ struct SavedItemsView: View {
                     }
                     .onDelete(perform: deleteItem)
                 }
-                .navigationTitle(Text("Saved Items"))
+                .navigationTitle(Text("Add a Saved Item"))
                 // When item selected, add it to GroceryItems list
                 .onChange(of: selectedItemID) {
                     let selectedItem = savedItems.items.first(where: {

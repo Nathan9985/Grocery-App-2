@@ -59,7 +59,7 @@ struct AddSavedItem: View {
                     }
                 )
             }
-            .navigationTitle("Save Item")
+            .navigationTitle("Save an Item")
         }
     }
 }
