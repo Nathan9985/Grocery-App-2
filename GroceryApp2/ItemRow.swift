@@ -26,8 +26,11 @@ struct ItemRow: View {
                 Text(groceryItem.category.rawValue)
                     .font(.subheadline)
                 Spacer()
-                let timeRemaining = Calendar.current.dateComponents([.day], from: Date.now, to: groceryItem.bestby)
-                Text("Days Remaining: \(timeRemaining.day!)")
+                // Get days from today to bestby date, ignore time of day
+                let startDay = Calendar.current.dateComponents([.day], from: Date())
+                let endDay = Calendar.current.dateComponents([.day], from: groceryItem.bestby)
+                let daysRemaining = Calendar.current.dateComponents([.day], from: startDay, to: endDay)
+                Text("Days Remaining: \(daysRemaining.day!)")
                     .font(.subheadline)
             }
         }
@@ -35,5 +38,5 @@ struct ItemRow: View {
 }
 
 #Preview {
-    ItemRow(groceryItem: GroceryItem(name: "Apple", category: Category.Produce, bestby: createDate(year: 2026, month: 1, day: 16)))
+    ItemRow(groceryItem: GroceryItem(name: "Apple", category: Category.Produce, bestby: createDate(year: 2026, month: 1, day: 19)))
 }

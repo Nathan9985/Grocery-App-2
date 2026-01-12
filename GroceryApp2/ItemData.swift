@@ -38,6 +38,10 @@ enum Category: String, CaseIterable, Identifiable {
     case Canned = "Canned"
     case Meat = "Meat"
     case Dairy = "Dairy"
+    case Eggs = "Eggs"
+    case Baking = "Baking"
+    case Grain = "Grain"
+    case Condiment = "Condiment"
     
     var id: String { self.rawValue }
 }
