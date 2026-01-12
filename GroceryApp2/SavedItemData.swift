@@ -17,10 +17,10 @@ class SavedItem: Identifiable, ObservableObject {
     let id = UUID()
     
     @Published var name: String
-    @Published var category: Category
+    @Published var category: String
     @Published var lifespan: Int
     
-    init(name: String, category: Category, lifespan: Int) {
+    init(name: String, category: String, lifespan: Int) {
         self.name = name
         self.category = category
         self.lifespan = lifespan

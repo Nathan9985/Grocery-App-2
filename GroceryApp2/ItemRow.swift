@@ -23,7 +23,7 @@ struct ItemRow: View {
                     .font(.subheadline)
             }
             HStack {
-                Text(groceryItem.category.rawValue)
+                Text(groceryItem.category)
                     .font(.subheadline)
                 Spacer()
                 // Get days from today to bestby date ignore time of day
@@ -38,5 +38,5 @@ struct ItemRow: View {
 }
 
 #Preview {
-    ItemRow(groceryItem: GroceryItem(name: "Apple", category: Category.Produce, bestby: createDate(year: 2026, month: 1, day: 12)))
+    ItemRow(groceryItem: GroceryItem(name: "Apple", category: "Produce", bestby: createDate(year: 2026, month: 1, day: 12)))
 }

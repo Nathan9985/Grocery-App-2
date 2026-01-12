@@ -17,10 +17,11 @@ struct SavedItemsView: View {
     // Bring in the groceryItems object to keep track of groceries user has saved
     @ObservedObject var savedItems: SavedItems
     @ObservedObject var groceryItems: GroceryItems
+    @ObservedObject var savedCategories: Categories
     @State private var selectedItemID: UUID?
     
     // States for filtering and sorting
-    @State private var selectedCategory: Category = .None
+    @State private var selectedCategory: String = "None"
     @State private var sortByLifespan = true
     @State private var sortAscending = true
     
@@ -34,7 +35,7 @@ struct SavedItemsView: View {
         savedItems.items
             .filter { item in
                 // If selectedCategory is None, let all items pass, otherwise check category for match
-                selectedCategory == .None || item.category == selectedCategory
+                selectedCategory == "None" || item.category == selectedCategory
             }
             .sorted { lhs, rhs in
                 if (sortByLifespan) {
@@ -71,7 +72,7 @@ struct SavedItemsView: View {
                     // Add item button
                     ToolbarItem(placement: .topBarTrailing) {
                         NavigationLink {
-                            AddSavedItem(savedItems: savedItems)
+                            AddSavedItem(savedItems: savedItems, savedCategories: savedCategories)
                         } label: {
                             Image(systemName: "plus.app")
                                 .font(.title2)
@@ -99,11 +100,11 @@ struct SavedItemsView: View {
                     // Filter button
                     ToolbarItem(placement: .topBarLeading) {
                         Picker("Fitler", selection: $selectedCategory) {
-                            ForEach(Category.allCases, id: \.self) { category in
-                                if (category == .None) {
+                            ForEach(savedCategories.getCategories(), id: \.self) { category in
+                                if (category == "None") {
                                     Text("All")
                                 } else {
-                                    Text(category.rawValue)
+                                    Text(category)
                                 }
                             }
                         }
@@ -126,5 +127,5 @@ struct SavedItemsView: View {
 }
 
 #Preview {
-    SavedItemsView(savedItems: SavedItems(items: [SavedItem(name: "Salmon", category: .Meat, lifespan: 5)]), groceryItems: GroceryItems(items: [GroceryItem(name: "Apple", category: Category.Produce, bestby: createDate(year: 2026, month: 1, day: 16))]))
+    SavedItemsView(savedItems: SavedItems(items: [SavedItem(name: "Salmon", category: "Meat", lifespan: 5)]), groceryItems: GroceryItems(items: [GroceryItem(name: "Apple", category: "Produce", bestby: createDate(year: 2026, month: 1, day: 16))]), savedCategories: Categories(startingCategories: ["Produce", "Seafood"]))
 }

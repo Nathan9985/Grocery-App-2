@@ -27,6 +27,7 @@ private enum ViewSelection: String, CaseIterable {
 struct AddItem: View {
     @ObservedObject var groceryItems: GroceryItems
     @ObservedObject var savedItems: SavedItems
+    @ObservedObject var savedCategories: Categories
     
     // Keep track of which add view should be displayed
     @State private var selectedView: ViewSelection = .New
@@ -45,9 +46,9 @@ struct AddItem: View {
             
             switch selectedView {
             case .New:
-                FromNewView(groceryItems: self.groceryItems)
+                FromNewView(groceryItems: self.groceryItems, savedCategories: savedCategories)
             case .Saved:
-                SavedItemsView(savedItems: self.savedItems, groceryItems: self.groceryItems)
+                SavedItemsView(savedItems: self.savedItems, groceryItems: self.groceryItems, savedCategories: savedCategories)
             }
         }
     }
@@ -56,11 +57,13 @@ struct AddItem: View {
 struct FromNewView: View {
     
     @ObservedObject var groceryItems: GroceryItems
+    @ObservedObject var savedCategories: Categories
     
     // Variables to build new GroceryItem object from
     @State private var selectedName: String = ""
-    @State private var selectedCategory: Category = .None
+    @State var selectedCategory: String = "None"
     @State private var selectedBestby: Date = Date()
+    
     
     // Deal with dismissing this view and going back to home page
     @Environment(\.dismiss) private var dismiss
@@ -68,19 +71,23 @@ struct FromNewView: View {
     var body: some View {
         NavigationView {
             Form {
+                // Input item name
                 TextField(
                     "Item Name",
                     text: $selectedName
                 )
                 
-                Picker("Category", selection: $selectedCategory) {
-                    ForEach(Category.allCases, id: \.self) { category in
-                        Text(category.rawValue)
-                    }
+                // Select category
+                // Passes in selectedCategory which is then updated in CategoryDetail and returned
+                // Uses CategoryRow to display the row
+                NavigationLink(destination: CategoryDetail(savedCategories: savedCategories, selectedCategory: $selectedCategory)) {
+                    CategoryRow(categoryName: selectedCategory)
                 }
                 
+                // Pick a best by date
                 DatePicker("Best By", selection: $selectedBestby, displayedComponents: [.date])
                 
+                // Button to create the item and add to GroceryItems array
                 Button(
                     "Add Item",
                     action: {
@@ -95,5 +102,5 @@ struct FromNewView: View {
 }
 
 #Preview {
-    AddItem(groceryItems: GroceryItems(items: [GroceryItem(name: "Apple", category: Category.Produce, bestby: createDate(year: 2026, month: 1, day: 16))]), savedItems: SavedItems(items: [SavedItem(name: "Salmon", category: .Meat, lifespan: 5)]))
+    AddItem(groceryItems: GroceryItems(items: [GroceryItem(name: "Apple", category: "Produce", bestby: createDate(year: 2026, month: 1, day: 16))]), savedItems: SavedItems(items: [SavedItem(name: "Salmon", category: "Seafood", lifespan: 5)]), savedCategories: Categories(startingCategories: ["Produce", "Dairy"]))
 }

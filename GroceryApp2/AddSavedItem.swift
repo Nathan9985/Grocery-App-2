@@ -9,13 +9,14 @@ import SwiftUI
 
 struct AddSavedItem: View {
     @ObservedObject var savedItems: SavedItems
+    @ObservedObject var savedCategories: Categories
     
     // Variables to build new SavedItem object from
     @State private var selectedName: String = ""
-    @State private var selectedCategory: Category = .None
+    @State private var selectedCategory: String = "None"
     @State private var selectedLifespan: Int?
     @State private var selectedBestby: Date = Date()
-    
+            
     @Environment(\.dismiss) private var dismiss
     
     private let lifespanFormatter: NumberFormatter = {
@@ -36,10 +37,8 @@ struct AddSavedItem: View {
                     text: $selectedName
                 )
                 
-                Picker("Category", selection: $selectedCategory) {
-                    ForEach(Category.allCases, id: \.self) { category in
-                        Text(category.rawValue)
-                    }
+                NavigationLink(destination: CategoryDetail(savedCategories: savedCategories, selectedCategory: $selectedCategory)) {
+                    CategoryRow(categoryName: selectedCategory)
                 }
                 
                 TextField(
@@ -66,5 +65,5 @@ struct AddSavedItem: View {
 }
 
 #Preview {
-    AddSavedItem(savedItems: SavedItems(items: [SavedItem(name: "Apple", category: .Produce, lifespan: 12)]))
+    AddSavedItem(savedItems: SavedItems(items: [SavedItem(name: "Apple", category: "Produce", lifespan: 12)]), savedCategories: Categories(startingCategories: ["Produce", "Meat", "Seafood"]))
 }

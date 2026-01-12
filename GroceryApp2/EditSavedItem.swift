@@ -10,9 +10,10 @@ import SwiftUI
 struct EditSavedItem: View {
     // SavedItem object is received from SavedItems, thus @ObservedObject
     @ObservedObject var savedItem: SavedItem
+    @ObservedObject var savedCategories: Categories
     
     @State var updatedName: String = ""
-    @State var updatedCategory: Category = .None
+    @State var updatedCategory: String = "None"
     @State var UpdatedLifespan: Int = 0
     
     private let lifespanFormatter: NumberFormatter = {
@@ -34,8 +35,8 @@ struct EditSavedItem: View {
                 )
                 
                 Picker("Category", selection: $updatedCategory) {
-                    ForEach(Category.allCases, id: \.self) { category in
-                        Text(category.rawValue)
+                    ForEach(savedCategories.getCategories(), id: \.self) { category in
+                        Text(category)
                     }
                 }
                 
@@ -65,5 +66,5 @@ struct EditSavedItem: View {
 }
 
 #Preview {
-    EditSavedItem(savedItem: SavedItem(name: "Apple", category: .Produce, lifespan: 7))
+    EditSavedItem(savedItem: SavedItem(name: "Apple", category: "Produce", lifespan: 7), savedCategories: Categories(startingCategories: ["Produce", "Canned", "Seafood"]))
 }

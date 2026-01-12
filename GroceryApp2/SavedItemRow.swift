@@ -22,7 +22,7 @@ struct SavedItemRow: View {
                     .font(.title2)
             }
             HStack {
-                Text(savedItem.category.rawValue)
+                Text(savedItem.category)
                     .font(.subheadline)
             }
         }
@@ -30,5 +30,5 @@ struct SavedItemRow: View {
 }
 
 #Preview {
-    SavedItemRow(savedItem: SavedItem(name: "Apple", category: Category.Produce, lifespan: 5))
+    SavedItemRow(savedItem: SavedItem(name: "Apple", category: "Fruit", lifespan: 5))
 }

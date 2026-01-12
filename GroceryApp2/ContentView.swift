@@ -20,11 +20,14 @@ struct ContentView: View {
     // Created and owned by ContentView but used elsewhere, so @StateObject
     @StateObject var groceryItems: GroceryItems = GroceryItems()
     @StateObject var savedItems: SavedItems = SavedItems()
+    @StateObject var savedCategories: Categories = Categories(startingCategories: ["Dairy", "Meat", "Seafood", "Bakery", "Canned", "Dessert"])
     
     // States for filtering and sorting
-    @State private var selectedCategory: Category = .None
+    @State private var selectedCategory: String = "None"
     @State private var sortByBestby = true
     @State private var sortAscending = true
+    
+    @State var filterCategories: [String] = []
     
     // Array to actually filter and sort groceryItems
     // Maintain one source of truth in groceryItems, maintain display properties in
@@ -33,7 +36,7 @@ struct ContentView: View {
         groceryItems.items
             .filter { item in
                 // If selectedCategory is None, let all items pass, otherwise check category for match
-                selectedCategory == .None || item.category == selectedCategory
+                selectedCategory == "None" || item.category == selectedCategory
             }
             .sorted { lhs, rhs in
                 if (sortByBestby) {
@@ -51,7 +54,7 @@ struct ContentView: View {
             // When plus button clicked on, go into add screen
             List() {
                 ForEach(displayedItems) { item in
-                    NavigationLink(destination: EditItem(groceryItem: item, groceryItems: groceryItems)) {
+                    NavigationLink(destination: EditItem(groceryItem: item, groceryItems: groceryItems, savedCategories: savedCategories)) {
                         ItemRow(groceryItem: item)
                     }
                 }
@@ -62,7 +65,7 @@ struct ContentView: View {
                 // Add item button
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
-                        AddItem(groceryItems: groceryItems, savedItems: savedItems)
+                        AddItem(groceryItems: groceryItems, savedItems: savedItems, savedCategories: savedCategories)
                     } label: {
                         Image(systemName: "plus.app")
                             .font(.title2)
@@ -90,15 +93,19 @@ struct ContentView: View {
                 // Filter button
                 ToolbarItem(placement: .topBarLeading) {
                     Picker("Fitler", selection: $selectedCategory) {
-                        ForEach(Category.allCases, id: \.self) { category in
-                            if (category == .None) {
+                        ForEach(filterCategories, id: \.self) { category in
+                            if (category == "None") {
                                 Text("All")
                             } else {
-                                Text(category.rawValue)
+                                Text(category)
                             }
                         }
                     }
                 }
+            }
+            .onAppear() {
+                filterCategories = savedCategories.getCategories()
+                filterCategories.insert("None", at: 0)
             }
         }
     }

@@ -17,10 +17,10 @@ class GroceryItem: Identifiable, ObservableObject {
     let id = UUID()
     
     @Published var name: String
-    @Published var category: Category
+    @Published var category: String
     @Published var bestby: Date
     
-    init(name: String, category: Category, bestby: Date) {
+    init(name: String, category: String, bestby: Date) {
         self.name = name
         self.category = category
         self.bestby = bestby
@@ -28,22 +28,48 @@ class GroceryItem: Identifiable, ObservableObject {
 }
 
 /*
- * Represent all possible categories user can choose from.
- *
- * Todo: Allow user to create their own
+ * Represent possible categories user can choose from
+ * User can add to and remove from this list
  */
-enum Category: String, CaseIterable, Identifiable {
-    case None = "None"
-    case Produce = "Produce"
-    case Canned = "Canned"
-    case Meat = "Meat"
-    case Dairy = "Dairy"
-    case Eggs = "Eggs"
-    case Baking = "Baking"
-    case Grain = "Grain"
-    case Condiment = "Condiment"
+class Categories: ObservableObject {
     
-    var id: String { self.rawValue }
+    @Published private var categories: [String]
+    
+    // Initialize an empty categories array
+    init() {
+        categories = []
+    }
+    
+    // Initialized a pre-filled categories array
+    init(startingCategories: [String]) {
+        categories = startingCategories
+    }
+    
+    // Add the category if it does not exist already
+    func addCategory(categoryName: String) {
+        if (categories.contains(categoryName)) {
+            print("Category \(categoryName) already exists")
+        } else {
+            categories.append(categoryName)
+        }
+    }
+    
+    // Remove a given category by name
+    func removeByName(categoryName: String) {
+        categories.removeAll { $0 == categoryName }
+    }
+    
+    // Remove a given category by index
+    func removeByIndex(categoryIndex: Int) {
+        categories.remove(at: categoryIndex)
+    }
+    
+    // Return the underlying categories array for more separation
+    // Can also make the array private to make extra private
+    func getCategories() -> [String] {
+        return categories
+    }
+    
 }
 
 /*

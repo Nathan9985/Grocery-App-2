@@ -13,9 +13,10 @@ struct EditItem: View {
     // GroceryItem object is received from ContentView, thus @ObservedObject
     @ObservedObject var groceryItem: GroceryItem
     @ObservedObject var groceryItems: GroceryItems
+    @ObservedObject var savedCategories: Categories
     
     @State var updatedName: String = ""
-    @State var updatedCategory: Category = .None
+    @State var updatedCategory: String = "None"
     @State var UpdatedBestby: Date = Date()
     
     @Environment(\.dismiss) private var dismiss
@@ -31,8 +32,8 @@ struct EditItem: View {
                 )
                 
                 Picker("Category", selection: $updatedCategory) {
-                    ForEach(Category.allCases, id: \.self) { category in
-                        Text(category.rawValue)
+                    ForEach(savedCategories.getCategories(), id: \.self) { category in
+                        Text(category)
                     }
                 }
                 
@@ -63,5 +64,5 @@ struct EditItem: View {
 }
 
 #Preview {
-    EditItem(groceryItem: GroceryItem(name: "Apple", category: Category.Produce, bestby: createDate(year: 2026, month: 1, day: 16)), groceryItems: GroceryItems(items: []))
+    EditItem(groceryItem: GroceryItem(name: "Apple", category: "Fruit", bestby: createDate(year: 2026, month: 1, day: 16)), groceryItems: GroceryItems(items: []), savedCategories: Categories(startingCategories: ["Fruit", "Meat", "Seafood"]))
 }
