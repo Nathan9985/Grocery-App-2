@@ -52,7 +52,7 @@ struct ContentView: View {
                 }
                 .onDelete(perform: deleteItem)
             }
-            .navigationTitle(Text("Your Fridge/Pantry"))
+            .navigationTitle(Text("Thy Larder"))
             .toolbar {
                 // Add item button
                 ToolbarItem(placement: .topBarTrailing) {

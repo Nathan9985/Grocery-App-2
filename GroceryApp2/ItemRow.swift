@@ -26,17 +26,17 @@ struct ItemRow: View {
                 Text(groceryItem.category.rawValue)
                     .font(.subheadline)
                 Spacer()
-                // Get days from today to bestby date, ignore time of day
-                let startDay = Calendar.current.dateComponents([.day], from: Date())
-                let endDay = Calendar.current.dateComponents([.day], from: groceryItem.bestby)
-                let daysRemaining = Calendar.current.dateComponents([.day], from: startDay, to: endDay)
-                Text("Days Remaining: \(daysRemaining.day!)")
-                    .font(.subheadline)
+                // Get days from today to bestby date ignore time of day
+                let timeDifference = groceryItem.bestby.timeIntervalSinceReferenceDate - Date.now.timeIntervalSinceReferenceDate
+                let daysDifference = ((timeDifference / 60) / 60) / 24
+                let daysRemaining = Int(daysDifference.rounded(.up))
+                Text("Days Remaining: \(daysRemaining)")
+                    .font(.title3)
             }
         }
     }
 }
 
 #Preview {
-    ItemRow(groceryItem: GroceryItem(name: "Apple", category: Category.Produce, bestby: createDate(year: 2026, month: 1, day: 19)))
+    ItemRow(groceryItem: GroceryItem(name: "Apple", category: Category.Produce, bestby: createDate(year: 2026, month: 1, day: 12)))
 }

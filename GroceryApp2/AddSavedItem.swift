@@ -14,6 +14,7 @@ struct AddSavedItem: View {
     @State private var selectedName: String = ""
     @State private var selectedCategory: Category = .None
     @State private var selectedLifespan: Int?
+    @State private var selectedBestby: Date = Date()
     
     @Environment(\.dismiss) private var dismiss
     
@@ -42,11 +43,11 @@ struct AddSavedItem: View {
                 }
                 
                 TextField(
-                    "Lifespan",
+                    "Best By Duration (Days)",
                     value: $selectedLifespan,
                     formatter: lifespanFormatter
                 )
-                
+                                
                 Button(
                     "Add Item",
                     action: {
@@ -59,7 +60,7 @@ struct AddSavedItem: View {
                     }
                 )
             }
-            .navigationTitle("Save an Item")
+            .navigationTitle("Create a Saved Item")
         }
     }
 }

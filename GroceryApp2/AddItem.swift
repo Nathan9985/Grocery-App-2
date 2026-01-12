@@ -16,8 +16,8 @@ import SwiftUI
 
 // Enum for Picker control
 private enum ViewSelection: String, CaseIterable {
-    case Saved = "From Saved"
-    case New = "From New"
+    case New = "Add New Item"
+    case Saved = "My Saved Items"
     
     var title: String {
         return self.rawValue
@@ -29,7 +29,7 @@ struct AddItem: View {
     @ObservedObject var savedItems: SavedItems
     
     // Keep track of which add view should be displayed
-    @State private var selectedView: ViewSelection = .Saved
+    @State private var selectedView: ViewSelection = .New
     
     var body: some View {
         // Change views depending on add method
