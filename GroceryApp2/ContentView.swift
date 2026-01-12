@@ -24,6 +24,7 @@ struct ContentView: View {
     // States for filtering and sorting
     @State private var selectedCategory: Category = .None
     @State private var sortByBestby = true
+    @State private var sortAscending = true
     
     // Array to actually filter and sort groceryItems
     // Maintain one source of truth in groceryItems, maintain display properties in
@@ -35,7 +36,11 @@ struct ContentView: View {
                 selectedCategory == .None || item.category == selectedCategory
             }
             .sorted { lhs, rhs in
-                sortByBestby ? lhs.bestby < rhs.bestby : lhs.name < rhs.name
+                if (sortByBestby) {
+                    sortAscending ? lhs.bestby < rhs.bestby : lhs.bestby > rhs.bestby
+                } else {
+                    sortAscending ? lhs.name < rhs.name : lhs.name > rhs.name
+                }
             }
     }
     
@@ -61,6 +66,15 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: "plus.app")
                             .font(.title2)
+                    }
+                }
+                                
+                // Sort by ascending or descending
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        sortAscending.toggle()
+                    } label: {
+                        sortAscending ? Image(systemName: "arrow.up.square") : Image(systemName: "arrow.down.square")
                     }
                 }
                 

@@ -22,6 +22,7 @@ struct SavedItemsView: View {
     // States for filtering and sorting
     @State private var selectedCategory: Category = .None
     @State private var sortByLifespan = true
+    @State private var sortAscending = true
     
     // Deal with dismissing this view and going back to home page
     @Environment(\.dismiss) private var dismiss
@@ -36,7 +37,11 @@ struct SavedItemsView: View {
                 selectedCategory == .None || item.category == selectedCategory
             }
             .sorted { lhs, rhs in
-                sortByLifespan ? lhs.lifespan < rhs.lifespan : lhs.name < rhs.name
+                if (sortByLifespan) {
+                    sortAscending ? lhs.lifespan < rhs.lifespan : lhs.lifespan > rhs.lifespan
+                } else {
+                    sortAscending ? lhs.name < rhs.name : lhs.name > rhs.name
+                }
             }
     }
     
@@ -70,6 +75,15 @@ struct SavedItemsView: View {
                         } label: {
                             Image(systemName: "plus.app")
                                 .font(.title2)
+                        }
+                    }
+                    
+                    // Sort by ascending or descending
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            sortAscending.toggle()
+                        } label: {
+                            sortAscending ? Image(systemName: "arrow.up.square") : Image(systemName: "arrow.down.square")
                         }
                     }
                     
