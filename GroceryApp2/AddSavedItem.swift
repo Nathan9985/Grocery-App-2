@@ -65,5 +65,5 @@ struct AddSavedItem: View {
 }
 
 #Preview {
-    AddSavedItem(savedItems: SavedItems(items: [SavedItem(name: "Apple", category: "Produce", lifespan: 12)]), savedCategories: Categories(startingCategories: ["Produce", "Meat", "Seafood"]))
+    AddSavedItem(savedItems: SavedItems(items: [SavedItem(name: "Apple", category: "Produce", lifespan: 12)]), savedCategories: Categories(startingCategories: ["None", "Produce", "Meat", "Seafood"]))
 }

@@ -24,8 +24,7 @@ struct SavedItemsView: View {
     @State private var selectedCategory: String = "None"
     @State private var sortByLifespan = true
     @State private var sortAscending = true
-    @State var filterCategories: [String] = []
-    
+
     // Deal with dismissing this view and going back to home page
     @Environment(\.dismiss) private var dismiss
     
@@ -101,7 +100,7 @@ struct SavedItemsView: View {
                     // Filter button
                     ToolbarItem(placement: .topBarLeading) {
                         Picker("Fitler", selection: $selectedCategory) {
-                            ForEach(filterCategories, id: \.self) { category in
+                            ForEach(savedCategories.getCategories(), id: \.self) { category in
                                 if (category == "None") {
                                     Text("All")
                                 } else {
@@ -110,10 +109,6 @@ struct SavedItemsView: View {
                             }
                         }
                     }
-                }
-                .onAppear() {
-                    filterCategories = savedCategories.getCategories()
-                    filterCategories.insert("None", at: 0)
                 }
             }
         }
@@ -132,5 +127,5 @@ struct SavedItemsView: View {
 }
 
 #Preview {
-    SavedItemsView(savedItems: SavedItems(items: [SavedItem(name: "Salmon", category: "Meat", lifespan: 5)]), groceryItems: GroceryItems(items: [GroceryItem(name: "Apple", category: "Produce", bestby: createDate(year: 2026, month: 1, day: 16))]), savedCategories: Categories(startingCategories: ["Produce", "Seafood"]))
+    SavedItemsView(savedItems: SavedItems(items: [SavedItem(name: "Salmon", category: "Meat", lifespan: 5)]), groceryItems: GroceryItems(items: [GroceryItem(name: "Apple", category: "Produce", bestby: createDate(year: 2026, month: 1, day: 16))]), savedCategories: Categories(startingCategories: ["None", "Produce", "Seafood"]))
 }

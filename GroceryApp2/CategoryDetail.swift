@@ -25,15 +25,12 @@ struct CategoryDetail: View {
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        
-        let categories = savedCategories.getCategories()
-        
         NavigationView {
-            // List the categories currently in savedCategories list
+            // List the categories currently in categoryOptions list
             // Can either add categories using button or select a category
             // which is then passed back to the previous View
             List(selection: $localSelectedCategory) {
-                ForEach(categories, id: \.self) { category in
+                ForEach(savedCategories.getCategories(), id: \.self) { category in
                     Text(category)
                         .tag(category)
                 }
@@ -62,7 +59,9 @@ struct CategoryDetail: View {
     // Robust to deal with multiselect delete functionality
     func deleteItem(at offsets: IndexSet) {
         for index in offsets {
-            savedCategories.removeByIndex(categoryIndex: index)
+            if (savedCategories.getByIndex(categoryIndex: index) != "None") {
+                savedCategories.removeByIndex(categoryIndex: index)
+            }
         }
     }
 }
@@ -99,5 +98,5 @@ struct AddCategory: View {
 }
 
 #Preview {
-    CategoryDetail(savedCategories: Categories(startingCategories: ["Produce", "Canned", "Seafood"]), selectedCategory: .constant("None"))
+    CategoryDetail(savedCategories: Categories(startingCategories: ["None", "Produce", "Canned", "Seafood"]), selectedCategory: .constant("None"))
 }

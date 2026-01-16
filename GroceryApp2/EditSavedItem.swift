@@ -28,43 +28,44 @@ struct EditSavedItem: View {
         VStack(alignment: .center) {
             // Gather the Name, Category, and Lifespan,
             // then add it to the underlying object of SavedItem
-            Form {
-                TextField(
-                    "Item Name",
-                    text: $updatedName
-                )
-                
-                Picker("Category", selection: $updatedCategory) {
-                    ForEach(savedCategories.getCategories(), id: \.self) { category in
-                        Text(category)
+            NavigationView {
+                Form {
+                    TextField(
+                        "Item Name",
+                        text: $updatedName
+                    )
+                    
+                    // Select category
+                    NavigationLink(destination: CategoryDetail(savedCategories: savedCategories, selectedCategory: $updatedCategory)) {
+                        CategoryRow(categoryName: updatedCategory)
                     }
+                    
+                    TextField(
+                        "Lifespan",
+                        value: $UpdatedLifespan,
+                        formatter: lifespanFormatter
+                    )
+                    
+                    Button(
+                        "Update Item",
+                        action: {
+                            self.savedItem.name = updatedName
+                            self.savedItem.category = updatedCategory
+                            self.savedItem.lifespan = UpdatedLifespan
+                        }
+                    )
                 }
-                
-                TextField(
-                    "Lifespan",
-                    value: $UpdatedLifespan,
-                    formatter: lifespanFormatter
-                )
-                
-                Button(
-                    "Update Item",
-                    action: {
-                        self.savedItem.name = updatedName
-                        self.savedItem.category = updatedCategory
-                        self.savedItem.lifespan = UpdatedLifespan
-                    }
-                )
-            }
-            .onAppear() {
-                // Prepopulate @State variables with current value in list
-                updatedName = savedItem.name
-                updatedCategory = savedItem.category
-                UpdatedLifespan = savedItem.lifespan
+                .onAppear() {
+                    // Prepopulate @State variables with current value in list
+                    updatedName = savedItem.name
+                    updatedCategory = savedItem.category
+                    UpdatedLifespan = savedItem.lifespan
+                }
             }
         }
     }
 }
 
 #Preview {
-    EditSavedItem(savedItem: SavedItem(name: "Apple", category: "Produce", lifespan: 7), savedCategories: Categories(startingCategories: ["Produce", "Canned", "Seafood"]))
+    EditSavedItem(savedItem: SavedItem(name: "Apple", category: "Produce", lifespan: 7), savedCategories: Categories(startingCategories: ["None", "Produce", "Canned", "Seafood"]))
 }

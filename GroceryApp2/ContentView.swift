@@ -20,15 +20,13 @@ struct ContentView: View {
     // Created and owned by ContentView but used elsewhere, so @StateObject
     @StateObject var groceryItems: GroceryItems = GroceryItems()
     @StateObject var savedItems: SavedItems = SavedItems()
-    @StateObject var savedCategories: Categories = Categories(startingCategories: ["Dairy", "Meat", "Seafood", "Bakery", "Canned", "Dessert"])
+    @StateObject var savedCategories: Categories = Categories(startingCategories: ["None", "Dairy", "Meat", "Seafood", "Bakery", "Canned", "Dessert"])
     
     // States for filtering and sorting
     @State private var selectedCategory: String = "None"
     @State private var sortByBestby = true
     @State private var sortAscending = true
-    
-    @State var filterCategories: [String] = []
-    
+        
     // Array to actually filter and sort groceryItems
     // Maintain one source of truth in groceryItems, maintain display properties in
     // displayedItems
@@ -93,7 +91,7 @@ struct ContentView: View {
                 // Filter button
                 ToolbarItem(placement: .topBarLeading) {
                     Picker("Fitler", selection: $selectedCategory) {
-                        ForEach(filterCategories, id: \.self) { category in
+                        ForEach(savedCategories.getCategories(), id: \.self) { category in
                             if (category == "None") {
                                 Text("All")
                             } else {
@@ -102,10 +100,6 @@ struct ContentView: View {
                         }
                     }
                 }
-            }
-            .onAppear() {
-                filterCategories = savedCategories.getCategories()
-                filterCategories.insert("None", at: 0)
             }
         }
     }

@@ -25,31 +25,32 @@ struct EditItem: View {
         VStack(alignment: .center) {
             // Gather the Name, Category, and Best By date of new item,
             // then add it to the underlying object of GroceryItems
-            Form {
-                TextField(
-                    "Item Name",
-                    text: $updatedName
-                )
-                
-                Picker("Category", selection: $updatedCategory) {
-                    ForEach(savedCategories.getCategories(), id: \.self) { category in
-                        Text(category)
+            NavigationView {
+                Form {
+                    TextField(
+                        "Item Name",
+                        text: $updatedName
+                    )
+                    
+                    // Select category
+                    NavigationLink(destination: CategoryDetail(savedCategories: savedCategories, selectedCategory: $updatedCategory)) {
+                        CategoryRow(categoryName: updatedCategory)
                     }
+                    
+                    DatePicker("Best By", selection: $UpdatedBestby, displayedComponents: [.date])
+                    
+                    Button(
+                        "Update Item",
+                        action: {
+                            self.groceryItem.name = updatedName
+                            self.groceryItem.category = updatedCategory
+                            self.groceryItem.bestby = UpdatedBestby
+                            
+                            groceryItems.itemDidChange()
+                            dismiss()
+                        }
+                    )
                 }
-                
-                DatePicker("Best By", selection: $UpdatedBestby, displayedComponents: [.date])
-                
-                Button(
-                    "Update Item",
-                    action: {
-                        self.groceryItem.name = updatedName
-                        self.groceryItem.category = updatedCategory
-                        self.groceryItem.bestby = UpdatedBestby
-                        
-                        groceryItems.itemDidChange()
-                        dismiss()
-                    }
-                )
             }
             .onAppear() {
                 // Prepopulate @State variables with current value in list

@@ -70,6 +70,10 @@ class Categories: ObservableObject {
         return categories
     }
     
+    // Return the category String in a specific index
+    func getByIndex(categoryIndex: Int) -> String {
+        return categories[categoryIndex]
+    }
 }
 
 /*

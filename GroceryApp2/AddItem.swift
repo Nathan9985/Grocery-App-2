@@ -102,5 +102,5 @@ struct FromNewView: View {
 }
 
 #Preview {
-    AddItem(groceryItems: GroceryItems(items: [GroceryItem(name: "Apple", category: "Produce", bestby: createDate(year: 2026, month: 1, day: 16))]), savedItems: SavedItems(items: [SavedItem(name: "Salmon", category: "Seafood", lifespan: 5)]), savedCategories: Categories(startingCategories: ["Produce", "Dairy"]))
+    AddItem(groceryItems: GroceryItems(items: [GroceryItem(name: "Apple", category: "Produce", bestby: createDate(year: 2026, month: 1, day: 16))]), savedItems: SavedItems(items: [SavedItem(name: "Salmon", category: "Seafood", lifespan: 5)]), savedCategories: Categories(startingCategories: ["None", "Produce", "Dairy"]))
 }
