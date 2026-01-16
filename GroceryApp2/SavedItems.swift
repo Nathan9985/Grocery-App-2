@@ -24,6 +24,7 @@ struct SavedItemsView: View {
     @State private var selectedCategory: String = "None"
     @State private var sortByLifespan = true
     @State private var sortAscending = true
+    @State var filterCategories: [String] = []
     
     // Deal with dismissing this view and going back to home page
     @Environment(\.dismiss) private var dismiss
@@ -100,7 +101,7 @@ struct SavedItemsView: View {
                     // Filter button
                     ToolbarItem(placement: .topBarLeading) {
                         Picker("Fitler", selection: $selectedCategory) {
-                            ForEach(savedCategories.getCategories(), id: \.self) { category in
+                            ForEach(filterCategories, id: \.self) { category in
                                 if (category == "None") {
                                     Text("All")
                                 } else {
@@ -109,6 +110,10 @@ struct SavedItemsView: View {
                             }
                         }
                     }
+                }
+                .onAppear() {
+                    filterCategories = savedCategories.getCategories()
+                    filterCategories.insert("None", at: 0)
                 }
             }
         }
